@@ -45,7 +45,7 @@ function setupRoutes(app) {
             status: true,
             message: `${app_configuration.APP_NAME} Backend is running`,
             version: '2.0.0.0',
-            date: "22nd Sep 2025"
+            date: "24th Dec 2025"
         })
     })
 }
