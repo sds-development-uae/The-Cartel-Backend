@@ -12,6 +12,7 @@ const tagRoutes = require("./newsRoutes/tag.routes")
 const commentRoutes = require("./newsRoutes/newsComment.routes")
 const consultationRoutes = require("./consultation.routes")
 const publisherRoutes = require("./publisherRoutes/publisher.routes")
+const newsUpdateRoutes = require("./newsUpdate.routes")
 
 module.exports = {
     authRoutes,
@@ -27,5 +28,6 @@ module.exports = {
     tokenSubmissionRoutes,
     cloudionaryRoutes,
     consultationRoutes,
-    publisherRoutes
+    publisherRoutes,
+    newsUpdateRoutes
 }
