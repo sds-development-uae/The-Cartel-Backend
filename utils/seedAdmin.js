@@ -12,8 +12,8 @@ async function seed() {
     // const email = process.env.ADMIN_EMAIL;
     // const pwd = process.env.ADMIN_PASSWORD;
 
-    const email = "sd@gmail.com"
-    const pwd = "Sd@12345678"
+    const email = "test@mail.com"
+    const pwd = "test@12345678"
 
     if (!email || !pwd) throw new Error('ADMIN_EMAIL/ADMIN_PASSWORD must be set');
 

@@ -13,6 +13,8 @@ const commentRoutes = require("./newsRoutes/newsComment.routes")
 const consultationRoutes = require("./consultation.routes")
 const publisherRoutes = require("./publisherRoutes/publisher.routes")
 const newsUpdateRoutes = require("./newsUpdate.routes")
+const nichesRoutes = require("./marketplaceRoutes/niches.routes")
+const marketplaceCategoryRoutes = require("./marketplaceRoutes/marketplaceCategory.routes")
 
 module.exports = {
     authRoutes,
@@ -29,5 +31,7 @@ module.exports = {
     cloudionaryRoutes,
     consultationRoutes,
     publisherRoutes,
-    newsUpdateRoutes
+    newsUpdateRoutes,
+    nichesRoutes,
+    marketplaceCategoryRoutes
 }

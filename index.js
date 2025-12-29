@@ -5,7 +5,7 @@ const fileUpload = require("express-fileupload")
 
 const { app_configuration } = require("./config/app.config")
 const connect_mongodb = require("./connections/mongo.connection")
-const { authRoutes, walletRoutes, coinRoutes, planRoutes, membersRoute, newsRoutes, likeNewsRoutes, tokenSubmissionRoutes, cloudionaryRoutes, categoryRoutes, tagRoutes, commentRoutes, consultationRoutes, publisherRoutes, newsUpdateRoutes } = require("./routes")
+const { authRoutes, walletRoutes, coinRoutes, planRoutes, membersRoute, newsRoutes, likeNewsRoutes, tokenSubmissionRoutes, cloudionaryRoutes, categoryRoutes, tagRoutes, commentRoutes, consultationRoutes, publisherRoutes, newsUpdateRoutes, nichesRoutes, marketplaceCategoryRoutes } = require("./routes")
 const cookieParser = require("cookie-parser")
 
 function setupMiddleware(app) {
@@ -36,6 +36,10 @@ function setupRoutes(app) {
     app.use("/consultation", consultationRoutes)
     app.use("/publisher", publisherRoutes)
     app.use("/news-update", newsUpdateRoutes)
+
+    // marketplace
+    app.use("/niches", nichesRoutes)
+    app.use("/marketplace-category", marketplaceCategoryRoutes)
 
     app.use("/cloudionary", cloudionaryRoutes)
 
