@@ -1,4 +1,4 @@
-const { createPublisherQuery, getPublisherQuery, deletePublisherQuery, updatePublisherQuery, verifyWebsiteByMetaQuery } = require("../../query/publisherQuery/publisher.query")
+const { createPublisherQuery, getPublisherQuery, deletePublisherQuery, updatePublisherQuery, verifyWebsiteByMetaQuery, generateTokenQuery } = require("../../query/publisherQuery/publisher.query")
 
 
 
@@ -59,11 +59,20 @@ const verifyWebsiteByMetaController = async (req, res, next) => {
     }
 }
 
+const generateTokenController = async (req, res, next) => {
+    try {
+        const response = await generateTokenQuery(req.body)
+        return res.send(response)
+    } catch (err) {
+        next(err)
+    }
+}
 
 module.exports = {
     createPublisherController,
     getPublisherController,
     deletePublisherController,
     updatePublisherController,
-    verifyWebsiteByMetaController
+    verifyWebsiteByMetaController,
+    generateTokenController
 }

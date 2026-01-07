@@ -21,7 +21,20 @@ const PublisherSchema = new mongoose.Schema({
         type: String,
         trim: true,
         default: ""
-    }
+    },
+
+    profilePhoto: { type: String, default: null },
+    profileName: { type: String, default: null },
+    profileDescription: { type: String, default: "Not Provided" },
+    pageViews: { type: String, default: null },
+    subscribers: { type: String, default: null },
+    topGEO: { type: String, default: null },
+    price: { type: String, default: null },
+    language: [{ type: String, default: [] }],
+    country: { type: String, default: "Not Provided" },
+    marketplaceCategory: [{ type: mongoose.Schema.Types.ObjectId, ref: "MarketplaceCategorySchema", default: [] }],
+    niches: { type: mongoose.Schema.Types.ObjectId, ref: "NichesSchema" }
+
 }, { timestamps: true });
 
 

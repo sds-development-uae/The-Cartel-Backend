@@ -98,6 +98,8 @@ const getPublisherQuery = async ({ page, limit, accountType, search }) => {
             populate: [
                 { path: "actionTakenBy", select: "email" },
                 { path: "userId", select: "email fullName" },
+                { path: "niches", select: "name" },
+                { path: "marketplaceCategory", select: "name" }
             ]
         }
 
@@ -122,8 +124,8 @@ const updatePublisherQuery = async (details) => {
     try {
         const { _id, verificationStatus, actionNote } = details;
 
-        // STEP 1: Update publisher entry
-        const publisher = await publisherModel.findByIdAndUpdate(
+        // STEP 1: Update publisher
+        let publisher = await publisherModel.findByIdAndUpdate(
             _id,
             details,
             { new: true, runValidators: true }
@@ -137,7 +139,23 @@ const updatePublisherQuery = async (details) => {
             };
         }
 
-        // STEP 2: Fetch user details
+        // STEP 1.1: Populate required fields
+        publisher = await publisher.populate([
+            {
+                path: "niches",
+                select: "name"
+            },
+            {
+                path: "marketplaceCategory",
+                select: "name"
+            },
+            {
+                path: "userId",
+                select: "email"
+            }
+        ]);
+
+        // STEP 2: Fetch user
         const user = await userModel.findById(publisher.userId);
         if (!user) {
             return {
@@ -175,7 +193,6 @@ const updatePublisherQuery = async (details) => {
         // CASE 2 → REJECTED
         // -----------------------------
         if (verificationStatus === "rejected") {
-
             const html = publisherRejectedEmailTemplate({
                 userName: user.fullName || "User",
                 website: publisher.website,
@@ -188,10 +205,8 @@ const updatePublisherQuery = async (details) => {
                 html,
             });
 
-            // Delete publisher entry
             await publisherModel.findByIdAndDelete(_id);
 
-            // Allow resubmission
             await userModel.findByIdAndUpdate(user._id, {
                 $set: { isPublisherFormSubmitted: false }
             });
@@ -204,7 +219,7 @@ const updatePublisherQuery = async (details) => {
         }
 
         // -----------------------------
-        // CASE 3 → PENDING / ANY OTHER STATUS
+        // CASE 3 → OTHER STATUS
         // -----------------------------
         return {
             status: true,
@@ -221,6 +236,7 @@ const updatePublisherQuery = async (details) => {
         };
     }
 };
+
 
 const deletePublisherQuery = async (ids) => {
     try {
@@ -268,6 +284,7 @@ const deletePublisherQuery = async (ids) => {
 
 
 const verifyWebsiteByMetaQuery = async (details) => {
+    console.log("hello", details)
     try {
 
         const { website, userId } = details
@@ -314,10 +331,48 @@ const verifyWebsiteByMetaQuery = async (details) => {
     }
 }
 
+const generateTokenQuery = async (details) => {
+    try {
+        const { _id } = details;
+
+        const token = crypto.randomBytes(6).toString("hex");
+        console.log({ token })
+        // STEP 1: Update publisher entry
+        const publisher = await publisherModel.findByIdAndUpdate(
+            _id,
+            { verificationToken: token },
+            { new: true, runValidators: true }
+        );
+
+        if (!publisher) {
+            return {
+                status: false,
+                statusCode: 404,
+                message: "Publisher request not found"
+            };
+        }
+
+        return {
+            status: true,
+            statusCode: 200,
+            message: "Token updated",
+            publisher
+        }
+
+    } catch (error) {
+        return {
+            status: false,
+            statusCode: 500,
+            message: error.message
+        }
+    }
+}
+
 module.exports = {
     createPublisherQuery,
     getPublisherQuery,
     updatePublisherQuery,
     deletePublisherQuery,
-    verifyWebsiteByMetaQuery
+    verifyWebsiteByMetaQuery,
+    generateTokenQuery
 };

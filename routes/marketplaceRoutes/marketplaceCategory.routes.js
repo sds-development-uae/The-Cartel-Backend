@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post('/', adminOnly, createMarketplaceCategoryController)
 
-router.get('/', adminOnly, getMarketplaceCategoryListController)
+router.get('/', getMarketplaceCategoryListController)
 
 router.post('/update', adminOnly, editMarketplaceCategoryController)
 

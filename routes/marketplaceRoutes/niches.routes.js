@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post('/', adminOnly, createNichesController)
 
-router.get('/', adminOnly, getNichesListController)
+router.get('/', getNichesListController)
 
 router.post('/update', adminOnly, editNichesController)
 

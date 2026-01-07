@@ -76,6 +76,47 @@ const generateSignatureForUploadPhotos = async (req, res) => {
     }
 };
 
+const generateSignatureForPublisherPhotos = async (req, res) => {
+    try {
+        const { publisherId } = req.body;
+
+        if (!publisherId) {
+            return res.status(400).json({ error: "publisherId is required" });
+        }
+
+        const timestamp = Math.round(Date.now() / 1000);
+
+        const folder = "publisher_photos";
+        const public_id = publisherId; // ONE IMAGE PER PUBLISHER
+
+        const paramsToSign = {
+            timestamp,
+            folder,
+            public_id,
+            overwrite: true,
+            invalidate: true,
+        };
+
+        const signature = cloudinary.utils.api_sign_request(
+            paramsToSign,
+            process.env.CLOUDINARY_API_SECRET
+        );
+
+        res.json({
+            timestamp,
+            folder,
+            signature,
+            cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+            public_id,
+            apiKey: process.env.CLOUDINARY_API_KEY,
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to generate signature" });
+    }
+};
 
 
-module.exports = { generateSignature, generateSignatureForUploadPhotos };
+
+module.exports = { generateSignature, generateSignatureForUploadPhotos, generateSignatureForPublisherPhotos };
