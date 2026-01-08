@@ -8,7 +8,6 @@ const cheerio = require("cheerio");
 
 const createPublisherQuery = async (details) => {
     try {
-
         const { userId } = details;
 
         // Check for existing publisher
