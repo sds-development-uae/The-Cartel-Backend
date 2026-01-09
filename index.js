@@ -48,8 +48,8 @@ function setupRoutes(app) {
         return res.send({
             status: true,
             message: `${app_configuration.APP_NAME} Backend is running`,
-            version: '2.0.0.0',
-            date: "24th Dec 2025"
+            version: '3.0.0.0',
+            date: "09th Jan 2026"
         })
     })
 }
