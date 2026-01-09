@@ -5,6 +5,7 @@ const { sendMail } = require("../../services/sendMail");
 const { publisherRequestTemplate, publisherConfirmationTemplate, publisherRejectedEmailTemplate, publisherVerifiedEmailTemplate } = require("../../services/emailTemplates");
 const { default: axios } = require("axios");
 const cheerio = require("cheerio");
+const { Language } = require("firebase/ai");
 
 const createPublisherQuery = async (details) => {
     try {
@@ -74,8 +75,9 @@ const createPublisherQuery = async (details) => {
 };
 
 
-const getPublisherQuery = async ({ page, limit, accountType, search }) => {
+const getPublisherQuery = async ({ page, limit, accountType, search, country, language, marketplaceCategory, niches, minPrice, maxPrice, minPageViews, maxPageViews }) => {
     try {
+        console.log(language)
         let query = {}
 
         // Search by fullName or organizationName
@@ -89,6 +91,37 @@ const getPublisherQuery = async ({ page, limit, accountType, search }) => {
         if (accountType !== "all") {
             query.accountType = accountType
         }
+
+        if (country.length > 0) {
+            query.country = { $in: country }
+        }
+
+        if (language.length > 0) {
+            query.language = { $in: language };
+        }
+
+        if (marketplaceCategory.length > 0) {
+            query.marketplaceCategory = { $in: marketplaceCategory };
+        }
+
+        if (niches.length > 0) {
+            query.niches = { $in: niches }
+        }
+
+        // 💰 PRICE RANGE
+        if (minPrice !== null || maxPrice !== null) {
+            query.price = {};
+            if (minPrice !== null) query.price.$gte = minPrice;
+            if (maxPrice !== null) query.price.$lte = maxPrice;
+        }
+
+        // 👀 PAGE VIEWS RANGE
+        if (minPageViews !== null || maxPageViews !== null) {
+            query.pageViews = {};
+            if (minPageViews !== null) query.pageViews.$gte = minPageViews;
+            if (maxPageViews !== null) query.pageViews.$lte = maxPageViews;
+        }
+
 
         const options = {
             page: page,
