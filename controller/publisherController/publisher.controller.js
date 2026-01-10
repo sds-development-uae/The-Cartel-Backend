@@ -25,7 +25,8 @@ const getPublisherController = async (req, res, next) => {
             minPrice,
             maxPrice,
             minPageViews,
-            maxPageViews
+            maxPageViews,
+            verificationStatus
         } = req.query;
 
         let normalizedCountry = [];
@@ -73,7 +74,8 @@ const getPublisherController = async (req, res, next) => {
             minPrice: minPrice ? Number(minPrice) : null,
             maxPrice: maxPrice ? Number(maxPrice) : null,
             minPageViews: minPageViews ? Number(minPageViews) : null,
-            maxPageViews: maxPageViews ? Number(maxPageViews) : null
+            maxPageViews: maxPageViews ? Number(maxPageViews) : null,
+            verificationStatus: verificationStatus || "all"
         });
 
         return res.send(response);

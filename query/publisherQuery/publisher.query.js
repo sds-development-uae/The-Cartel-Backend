@@ -75,9 +75,8 @@ const createPublisherQuery = async (details) => {
 };
 
 
-const getPublisherQuery = async ({ page, limit, accountType, search, country, language, marketplaceCategory, niches, minPrice, maxPrice, minPageViews, maxPageViews }) => {
+const getPublisherQuery = async ({ page, limit, accountType, search, country, language, marketplaceCategory, niches, minPrice, maxPrice, minPageViews, maxPageViews, verificationStatus }) => {
     try {
-        console.log(language)
         let query = {}
 
         // Search by fullName or organizationName
@@ -86,6 +85,10 @@ const getPublisherQuery = async ({ page, limit, accountType, search, country, la
                 { fullName: { $regex: search, $options: "i" } },
                 { organizationName: { $regex: search, $options: "i" } },
             ]
+        }
+
+        if (verificationStatus !== "all") {
+            query.verificationStatus = verificationStatus
         }
 
         if (accountType !== "all") {
