@@ -33,7 +33,8 @@ const PublisherSchema = new mongoose.Schema({
     language: [{ type: String, default: [] }],
     country: { type: String, default: "Not Provided" },
     marketplaceCategory: [{ type: mongoose.Schema.Types.ObjectId, ref: "MarketplaceCategorySchema", default: [] }],
-    niches: { type: mongoose.Schema.Types.ObjectId, ref: "NichesSchema", default: null }
+    niches: { type: mongoose.Schema.Types.ObjectId, ref: "NichesSchema", default: null },
+    membershipType: { type: String, default: null }
 
 }, { timestamps: true });
 
