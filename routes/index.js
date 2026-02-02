@@ -16,6 +16,7 @@ const newsUpdateRoutes = require("./newsUpdate.routes")
 const nichesRoutes = require("./marketplaceRoutes/niches.routes")
 const marketplaceCategoryRoutes = require("./marketplaceRoutes/marketplaceCategory.routes")
 const mailServiceRoutes = require("./mailServices.routes")
+const rolesRoute = require("../routes/roles.routes")
 
 module.exports = {
     authRoutes,
@@ -35,5 +36,6 @@ module.exports = {
     newsUpdateRoutes,
     nichesRoutes,
     marketplaceCategoryRoutes,
-    mailServiceRoutes
+    mailServiceRoutes,
+    rolesRoute
 }

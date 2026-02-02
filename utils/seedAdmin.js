@@ -15,8 +15,14 @@ async function seed() {
     // const email = "test@mail.com"
     // const pwd = "test@12345678"
 
-    const email = "editor@mail.com"
-    const pwd = "Editor@2026"
+    // const email = "editor@mail.com"
+    // const pwd = "Editor@2026"
+
+    // const email = "manish@mail.com"
+    // const pwd = "manish@2026"
+
+    const email = "superadmin@samdigitalsolutions.digital"
+    const pwd = "superAdmin@2026"
 
     if (!email || !pwd) throw new Error('ADMIN_EMAIL/ADMIN_PASSWORD must be set');
 
@@ -29,7 +35,7 @@ async function seed() {
 
 
     const hash = await bcrypt.hash(pwd, 10);
-    const u = new userModel({ email, passwordHash: hash, role: 'super-admin' });
+    const u = new userModel({ email, passwordHash: hash, role: ['697988add43a9791ccade8f3'] });
     await u.save();
     console.log('Admin created');
     process.exit(0);

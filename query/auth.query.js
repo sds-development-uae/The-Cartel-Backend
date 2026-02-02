@@ -4,16 +4,19 @@ const bcrypt = require("bcryptjs");
 const { sendOtpMail } = require("../services/mailService");
 const { otpTemplate, passwordChangedTemplate } = require("../services/emailTemplates");
 const otpVerificationModel = require("../models/otpVerification.model");
+const { sendUserWelcomeMail } = require("../services/gmailServices");
 
 const authQuery = async (details) => {
-    console.log({ details })
     const { email, password } = details;
 
     if (!email || !password) {
         return { status: false, statusCode: 400, message: "email and password is required" };
     }
 
-    const user = await userModel.findOne({ email });
+    const user = await userModel.findOne({ email }).populate({
+        path: "role", select: "roleName contents roleCode"
+    });
+
     if (!user) {
         return { status: false, statusCode: 401, message: "invalid email" };
     }
@@ -322,4 +325,220 @@ const forgotPasswordQuery = async (details) => {
     }
 }
 
-module.exports = { authQuery, signUpQuery, verifyOtpQuery, resendOtpQuery, forgotPasswordQuery };
+
+const createUserQuery = async (details) => {
+    try {
+        const { email, passwordHash } = details;
+
+        const existingUser = await userModel.findOne({ email });
+
+        if (existingUser) {
+            return {
+                status: false,
+                statusCode: 400,
+                message: "Email already registered. Try logging in."
+            };
+        }
+
+        const hashedPassword = await bcrypt.hash(passwordHash, 10);
+
+        // Create fresh user
+        const newUser = await userModel.create({
+            ...details,
+            passwordHash: hashedPassword,
+            createdBy: details.actionTakenBy
+        });
+
+        await sendUserWelcomeMail(details)
+
+        return {
+            status: true,
+            statusCode: 200,
+            message: "User registered successfully.",
+            newUser
+        };
+
+    } catch (error) {
+        return {
+            status: false,
+            statusCode: 500,
+            message: error.message
+        };
+    }
+}
+
+
+const getUserQuery = async ({ page, limit, search, isUserActive, roles }) => {
+    try {
+
+        const query = {}
+
+        if (search && search.trim() !== "") {
+            query.$or = [
+                { fullName: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } },
+                { country: { $regex: search, $options: "i" } }
+            ]
+        }
+
+        if (isUserActive !== "all") {
+            query.isUserActive = isUserActive
+        }
+
+        if (roles.length > 0) {
+            query.role = { $in: roles }
+        }
+
+        const options = {
+            page: page,
+            limit: limit,
+            sort: { createdAt: -1 },
+            populate: [
+                { path: "createdBy", select: "email" },
+                { path: "role", select: "roleName contents roleCode" }
+            ]
+        }
+
+        const users = await userModel.paginate(query, options)
+
+        return {
+            status: true,
+            statusCode: 200,
+            users
+        }
+
+    } catch (err) {
+        return {
+            status: false,
+            statusCode: 500,
+            message: err.message
+        }
+    }
+}
+
+
+const updateUserQuery = async (details) => {
+    try {
+        const { _id, passwordHash, email } = details;
+        console.log(details)
+        if (!_id) {
+            return {
+                status: false,
+                statusCode: 400,
+                message: "User ID is required for update"
+            };
+        }
+
+        // Check if user exists
+        const existingUser = await userModel.findById(_id);
+        if (!existingUser) {
+            return {
+                status: false,
+                statusCode: 404,
+                message: "User not found"
+            };
+        }
+
+        // Prevent email duplication
+        if (email && email !== existingUser.email) {
+            const emailExists = await userModel.findOne({ email });
+            if (emailExists) {
+                return {
+                    status: false,
+                    statusCode: 400,
+                    message: "Email already in use by another user"
+                };
+            }
+        }
+
+        // Clone update payload
+        const updatePayload = { ...details };
+
+        // Never update _id
+        delete updatePayload._id;
+
+        // Handle password update (only if sent)
+        if (passwordHash) {
+            updatePayload.passwordHash = await bcrypt.hash(passwordHash, 10);
+        } else {
+            delete updatePayload.passwordHash;
+        }
+
+        // Audit trail
+        updatePayload.updatedBy = details.actionTakenBy;
+        updatePayload.updatedAt = new Date();
+
+        const updatedUser = await userModel.findByIdAndUpdate(
+            _id,
+            { $set: updatePayload },
+            { new: true, runValidators: true }
+        );
+
+        return {
+            status: true,
+            statusCode: 200,
+            message: "User updated successfully",
+            updatedUser
+        };
+
+    } catch (error) {
+        return {
+            status: false,
+            statusCode: 500,
+            message: error.message
+        };
+    }
+};
+
+const deleteUserQuery = async (ids) => {
+    try {
+        ids = JSON.parse(ids)
+        if (!ids || !Array.isArray(ids) || ids.length == 0) {
+            return {
+                status: false,
+                statusCode: 400,
+                message: "Provide an array of user IDs"
+            }
+        }
+
+        const inValidIds = ids.filter(id => !id.match(/^[0-9a-fA-F]{24}$/))
+
+        if (inValidIds.length > 0) {
+            return {
+                status: false,
+                statusCode: 400,
+                message: "Invalid mongoDb ObjectId(s)",
+                inValidIds
+            }
+        }
+
+        const result = await userModel.deleteMany({ _id: { $in: ids } })
+
+        return {
+            status: true,
+            statusCode: 200,
+            message: `${result.deletedCount} user(s) delete successfully`,
+            deletedCount: result.deletedCount
+        }
+
+    } catch (error) {
+        return {
+            status: false,
+            statusCode: 500,
+            message: error.message
+        }
+    }
+}
+
+
+module.exports = {
+    authQuery,
+    signUpQuery,
+    verifyOtpQuery,
+    resendOtpQuery,
+    forgotPasswordQuery,
+    createUserQuery,
+    getUserQuery,
+    updateUserQuery,
+    deleteUserQuery
+};

@@ -312,6 +312,121 @@ const sendAdminContactMail = async (data) => {
     return transporter.sendMail(mailOptions);
 };
 
+const sendUserWelcomeMail = async (data) => {
+    const {
+        fullName,
+        email,
+        passwordHash,
+    } = data;
+
+    const mailOptions = {
+        from: `"The Cartel Admin" <sumangal@samdigitalsolutions.digital>`,
+        to: email,
+        subject: "✅ Your Account Has Been Successfully Created | The Cartel",
+        html: `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Welcome to The Cartel</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: #f4f6f8;
+        padding: 20px;
+        color: #333;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+    }
+    .header {
+        background: linear-gradient(135deg, #0c2746, #1a3d6c);
+        color: #ffffff;
+        padding: 30px;
+        text-align: center;
+    }
+    .content {
+        padding: 30px;
+    }
+    .credentials {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        border-left: 4px solid #0c2746;
+    }
+    .credentials p {
+        margin: 8px 0;
+        font-weight: 500;
+    }
+    .btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 14px 24px;
+        background: #0c2746;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    .footer {
+        background: #f4f6f8;
+        padding: 20px;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Welcome to The Cartel</h1>
+        <p>Your account is ready 🎉</p>
+    </div>
+
+    <div class="content">
+        <p>Hi <strong>${fullName}</strong>,</p>
+
+        <p>Your account has been successfully added to <strong>The Cartel Admin System</strong>.</p>
+
+        <div class="credentials">
+            <p><strong>Login URL:</strong><br/>
+            <a href="http://admin.thecartel.ai/" target="_blank">
+                http://admin.thecartel.ai/
+            </a></p>
+
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Password:</strong> ${passwordHash}</p>
+        </div>
+
+        <p>Please log in using the above credentials. For security reasons, we strongly recommend changing your password immediately after logging in.</p>
+
+        <a href="http://admin.thecartel.ai/" class="btn">Login to Dashboard</a>
+    </div>
+
+    <div class="footer">
+        <p>If you did not expect this email, please contact the system administrator immediately.</p>
+        <p>© ${new Date().getFullYear()} The Cartel Ai</p>
+    </div>
+</div>
+
+</body>
+</html>
+        `,
+    };
+
+    return transporter.sendMail(mailOptions);
+};
+
 module.exports = {
     sendAdminContactMail,
+    sendUserWelcomeMail
 };

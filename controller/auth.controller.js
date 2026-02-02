@@ -1,5 +1,5 @@
 const userModel = require("../models/user.model")
-const { authQuery, signUpQuery, verifyOtpQuery, resendOtpQuery, forgotPasswordQuery } = require("../query/auth.query")
+const { authQuery, signUpQuery, verifyOtpQuery, resendOtpQuery, forgotPasswordQuery, createUserQuery, getUserQuery, updateUserQuery, deleteUserQuery } = require("../query/auth.query")
 const { verifyRefreshToken, signAccessToken } = require("../services/jwt.service")
 
 
@@ -100,6 +100,71 @@ const logoutController = async (req, res) => {
 };
 
 
+const createUserController = async (req, res, next) => {
+    try {
+        const response = await createUserQuery(req.body)
+        return res.send(response)
+    } catch (err) {
+        next(err)
+    }
+}
+
+
+const getUserController = async (req, res, next) => {
+    try {
+        const {
+            page,
+            limit,
+            search,
+            isUserActive,
+            roles
+        } = req.query;
+        console.log(isUserActive)
+        let normalizedRoles = []
+
+        if (roles) {
+            try {
+                const parsed = JSON.parse(roles)
+                if (Array.isArray(parsed)) normalizedRoles = parsed
+            } catch { }
+        }
+
+        const response = await getUserQuery({
+            page: Number(page) || 1,
+            limit: Number(limit) || 10,
+            search: search || "",
+            isUserActive: isUserActive || "all",
+            roles: normalizedRoles
+        })
+
+        return res.send(response)
+    } catch (err) {
+        next(err)
+    }
+}
+
+
+const updateUserController = async (req, res, next) => {
+    try {
+        const response = await updateUserQuery(req.body)
+        return res.send(response)
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+const deleteUserController = async (req, res, next) => {
+    try {
+        const response = await deleteUserQuery(req.query.ids)
+        return res.send(response)
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
+
 module.exports = {
     authController,
     signUpController,
@@ -107,5 +172,9 @@ module.exports = {
     resendOtpController,
     forgotPasswordController,
     refreshController,
-    logoutController
+    logoutController,
+    createUserController,
+    getUserController,
+    updateUserController,
+    deleteUserController
 }
