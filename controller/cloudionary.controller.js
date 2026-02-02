@@ -78,7 +78,7 @@ const generateSignatureForUploadPhotos = async (req, res) => {
 
 const generateSignatureForPublisherPhotos = async (req, res) => {
     try {
-        const { publisherId } = req.body;
+        const { publisherId, folderName } = req.body;
 
         if (!publisherId) {
             return res.status(400).json({ error: "publisherId is required" });
@@ -86,7 +86,7 @@ const generateSignatureForPublisherPhotos = async (req, res) => {
 
         const timestamp = Math.round(Date.now() / 1000);
 
-        const folder = "publisher_photos";
+        const folder = folderName || "publisher_photos";
         const public_id = publisherId; // ONE IMAGE PER PUBLISHER
 
         const paramsToSign = {
@@ -118,5 +118,8 @@ const generateSignatureForPublisherPhotos = async (req, res) => {
 };
 
 
-
-module.exports = { generateSignature, generateSignatureForUploadPhotos, generateSignatureForPublisherPhotos };
+module.exports = {
+    generateSignature,
+    generateSignatureForUploadPhotos,
+    generateSignatureForPublisherPhotos,
+};

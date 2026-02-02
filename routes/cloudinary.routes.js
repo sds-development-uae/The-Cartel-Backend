@@ -9,4 +9,5 @@ router.post("/photo-upload", generateSignatureForUploadPhotos);
 
 router.post("/publisher-photos", generateSignatureForPublisherPhotos);
 
+
 module.exports = router;
