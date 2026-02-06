@@ -8,7 +8,8 @@
     "create-admin": "node scripts/create-admin.js",
     "news": "node scripts/migration.js",
     "export" : "node scripts/export.js",
-    "updateNews" : "node scripts/updateNews.js"
+    "updateNews" : "node scripts/updateNews.js",
+    "updateNewsAuthor":"node scripts/updateNewsAuthor.js"
   },
   "repository": {
     "type": "git",
