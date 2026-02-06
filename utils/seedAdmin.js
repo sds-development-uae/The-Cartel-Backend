@@ -35,7 +35,7 @@ async function seed() {
 
 
     const hash = await bcrypt.hash(pwd, 10);
-    const u = new userModel({ email, passwordHash: hash, role: ['697988add43a9791ccade8f3'] });
+    const u = new userModel({ email, passwordHash: hash, role: ['69818ef29d3a294e83034f74'] });
     await u.save();
     console.log('Admin created');
     process.exit(0);

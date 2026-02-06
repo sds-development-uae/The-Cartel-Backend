@@ -269,7 +269,7 @@ const getNewsQuery = async (page = 1, limit = 10, parentCategoryName, subCategor
                 { path: "category", select: "name slug _id" },
                 { path: "parentCategory", select: "name slug _id" },
                 { path: "tags", select: "name slug _id" },
-                { path: "createdBy", select: "email" },
+                { path: "createdBy", select: "-passwordHash -refreshToken -otpCode -otpExpires -__v" },
             ],
         };
 
@@ -761,10 +761,7 @@ const getNewsBySlugQuery = async (slug) => {
                     path: "tags",
                     select: "name slug _id",
                 },
-                {
-                    path: "createdBy",
-                    select: "email",
-                },
+                { path: "createdBy", select: "-passwordHash -refreshToken -otpCode -otpExpires -__v" },
             ],
         };
 
