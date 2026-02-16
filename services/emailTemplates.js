@@ -29,7 +29,7 @@ const otpTemplate = (otp) => {
 
         <!-- Footer -->
         <p style="text-align: center; color: #888; font-size: 12px; margin-top: 25px;">
-          © ${new Date().getFullYear()} The Coin Cartel — All Rights Reserved.
+          © ${new Date().getFullYear()} The Cartel Ai — All Rights Reserved.
         </p>
 
       </div>
@@ -140,7 +140,7 @@ const publisherRequestTemplate = (data) => {
     <div style="font-family: Arial, sans-serif; background-color: #0d0d0d; color: #e6e6e6; padding: 20px; border-radius: 10px;">
       
       <h2 style="color: #d4af37;">📢 New Publisher Request</h2>
-      <p>A new publisher application has been submitted on <b>The Coin Cartel</b>.</p>
+      <p>A new publisher application has been submitted on <b>The Cartel Ai</b>.</p>
 
       <h3 style="color: #ff3b3b;">Applicant Details:</h3>
       <ul>
@@ -165,7 +165,7 @@ const publisherRequestTemplate = (data) => {
 
       <br/>
       <p>Kind regards,</p>
-      <p><b>The Coin Cartel Admin System</b></p>
+      <p><b>The Cartel Ai Admin System</b></p>
     </div>
   `;
 };
@@ -184,7 +184,7 @@ const publisherConfirmationTemplate = (data) => {
 
       <p>
         Thank you for submitting your publisher application on 
-        <b>The Coin Cartel</b>.
+        <b>The Cartel Ai</b>.
       </p>
 
       <p>
@@ -196,7 +196,7 @@ const publisherConfirmationTemplate = (data) => {
 
       <br/>
       <p>Regards,</p>
-      <p><b>The Coin Cartel Team</b></p>
+      <p><b>The Cartel Ai Team</b></p>
     </div>
   `;
 };
@@ -230,7 +230,7 @@ const publisherRejectedEmailTemplate = ({
             You can update your information and submit the publisher form again anytime.
         </p>
 
-        <p>Regards,<br /><b>The Coin Cartel Team</b></p>
+        <p>Regards,<br /><b>The Cartel Ai Team</b></p>
     </div>
     `;
 };
@@ -259,14 +259,14 @@ const publisherVerifiedEmailTemplate = ({
 
         <p>
             You are now eligible to access all publisher features, submit campaigns, 
-            and collaborate with <b>The Coin Cartel</b>.
+            and collaborate with <b>The Cartel Ai</b>.
         </p>
 
         <p>
            We're excited to have you onboard and look forward to working with you!
         </p>
 
-        <p>Regards,<br /><b>The Coin Cartel Team</b></p>
+        <p>Regards,<br /><b>The Cartel Ai Team</b></p>
     </div>
   `;
 };

@@ -17,7 +17,7 @@ const sendNewMemberMail = async (member) => {
     console.log({ member }, process.env.ZOHO_USER, process.env.ZOHO_PASS)
     try {
         const mailOptions = {
-            from: `"The Coin Cartel Community" <${process.env.ZOHO_USER}>`,
+            from: `"The Cartel Ai Community" <${process.env.ZOHO_USER}>`,
             to: process.env.ADMIN_EMAIL_OG, // admin’s email
             subject: `New Member Registered: ${member.email}`,
             html: `
@@ -30,7 +30,7 @@ const sendNewMemberMail = async (member) => {
         
         <br/>
         <p>Thanks & Regards,</p>
-        <p><b>The Coin Cartel Community</b></p>
+        <p><b>The Cartel Ai Community</b></p>
       `
         };
 
@@ -45,7 +45,7 @@ const sendNewMemberMail = async (member) => {
 const sendOtpMail = async ({ to, subject, html, text, from }) => {
     try {
         const mailOptions = {
-            from: from || `"The Coin Cartel Community Team" <${process.env.ZOHO_USER}>`,
+            from: from || `"The Cartel Ai" <${process.env.ZOHO_USER}>`,
             to,
             subject,
             html,
