@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 const sendMail = async ({ to, subject, html }) => {
     try {
         const mailOptions = {
-            from: `"The Coin Cartel" <${process.env.ZOHO_USER}>`,
+            from: `"The Cartel Ai" <${process.env.ZOHO_USER}>`,
             to,
             subject,
             html,
