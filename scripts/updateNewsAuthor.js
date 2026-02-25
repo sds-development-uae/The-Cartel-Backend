@@ -1,17 +1,19 @@
 const { default: mongoose } = require("mongoose");
 const { default: newsModel } = require("../models/newsModel/news.model");
+const publisherModel = require("../models/publisher.model");
 
 
 const MONGO_URI = "mongodb+srv://sumangal_db_user:cwLb66XV6CjgOIir@cluster0.ljbwqus.mongodb.net/"
 
-const updateNewsAuthor = async (createdBy) => {
+const updatePublisher = async () => {
     try {
 
-        const result = await newsModel.updateMany(
+        const result = await publisherModel.updateMany(
             {}, // match ALL news documents
             {
                 $set: {
-                    createdBy: new mongoose.Types.ObjectId(createdBy),
+                    topGEO: [],
+                    niches: []
                 },
             }
         );
@@ -21,7 +23,7 @@ const updateNewsAuthor = async (createdBy) => {
             statusCode: 200,
             matchedCount: result.matchedCount,
             modifiedCount: result.modifiedCount,
-            message: "All news documents updated with createdBy",
+            message: "All publisher documents updated with createdBy",
         };
 
 
@@ -41,8 +43,7 @@ const runMigration = async () => {
         await mongoose.connect(MONGO_URI);
         console.log("✅ MongoDB connected.");
 
-        const createdBy = "6985f8282f97eb9f35b41431"; // Admin ID
-        const result = await updateNewsAuthor(createdBy);
+        const result = await updatePublisher();
         console.log(result);
 
         console.log("🔒 Closing MongoDB connection...");

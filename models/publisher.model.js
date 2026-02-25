@@ -28,12 +28,12 @@ const PublisherSchema = new mongoose.Schema({
     profileDescription: { type: String, default: "Not Provided" },
     pageViews: { type: Number, default: null, index: true },
     subscribers: { type: Number, default: null },
-    topGEO: { type: String, default: null },
+    topGEO: [{ type: String, default: [] }],
     price: { type: Number, default: null, index: true },
     language: [{ type: String, default: [] }],
     country: { type: String, default: "Not Provided" },
     marketplaceCategory: [{ type: mongoose.Schema.Types.ObjectId, ref: "MarketplaceCategorySchema", default: [] }],
-    niches: { type: mongoose.Schema.Types.ObjectId, ref: "NichesSchema", default: null },
+    niches: [{ type: mongoose.Schema.Types.ObjectId, ref: "NichesSchema", default: [] }],
     membershipType: { type: String, default: null }
 
 }, { timestamps: true });
