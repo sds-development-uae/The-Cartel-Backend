@@ -4,13 +4,13 @@ const adminOnly = require("../../services/role.service")
 const { createMarketplaceCategoryController, getMarketplaceCategoryListController, editMarketplaceCategoryController, deleteMarketplaceController } = require("../../controller/marketplaceController/marketplaceCategory.controller")
 const router = express.Router()
 
-router.post('/', adminOnly, createMarketplaceCategoryController)
+router.post('/', createMarketplaceCategoryController)
 
 router.get('/', getMarketplaceCategoryListController)
 
-router.post('/update', adminOnly, editMarketplaceCategoryController)
+router.post('/update', editMarketplaceCategoryController)
 
-router.delete("/", adminOnly, deleteMarketplaceController)
+router.delete("/", deleteMarketplaceController)
 
 router.use(commonErrors)
 
