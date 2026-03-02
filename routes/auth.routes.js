@@ -1,5 +1,5 @@
 const express = require("express")
-const { authController, refreshController, logoutController, signUpController, verifyOtpController, resendOtpController, forgotPasswordController, createUserController, getUserController, updateUserController, deleteUserController } = require("../controller/auth.controller")
+const { authController, refreshController, logoutController, signUpController, verifyOtpController, resendOtpController, forgotPasswordController, createUserController, getUserController, updateUserController, deleteUserController, resetPasswordByAdminController } = require("../controller/auth.controller")
 const { commonErrors } = require("../errors/error")
 const router = express.Router()
 
@@ -24,6 +24,8 @@ router.get('/get-user', getUserController)
 router.post("/update", updateUserController)
 
 router.delete("/delete-users", deleteUserController)
+
+router.post("/reset-password-by-admin", resetPasswordByAdminController)
 
 router.use(commonErrors)
 

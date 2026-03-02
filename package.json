@@ -7,9 +7,9 @@
     "start": "nodemon index.js",
     "create-admin": "node scripts/create-admin.js",
     "news": "node scripts/migration.js",
-    "export" : "node scripts/export.js",
-    "updateNews" : "node scripts/updateNews.js",
-    "updateNewsAuthor":"node scripts/updateNewsAuthor.js"
+    "export": "node scripts/export.js",
+    "updateNews": "node scripts/updateNews.js",
+    "updateNewsAuthor": "node scripts/updateNewsAuthor.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
