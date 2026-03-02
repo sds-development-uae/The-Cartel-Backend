@@ -5,6 +5,7 @@ const { sendOtpMail } = require("../services/mailService");
 const { otpTemplate, passwordChangedTemplate } = require("../services/emailTemplates");
 const otpVerificationModel = require("../models/otpVerification.model");
 const { sendUserWelcomeMail } = require("../services/gmailServices");
+const crypto = require("crypto")
 
 const authQuery = async (details) => {
     const { email, password } = details;
@@ -92,8 +93,7 @@ const signUpQuery = async (details) => {
             passwordHash: hashedPassword,
             isVerified: false
         });
-
-        // Create fresh OTP entry
+        // // Create fresh OTP entry
         await otpVerificationModel.create({
             email,
             otpCode: otp,
@@ -328,7 +328,7 @@ const forgotPasswordQuery = async (details) => {
 
 const createUserQuery = async (details) => {
     try {
-        const { email, passwordHash } = details;
+        const { email } = details;
 
         const existingUser = await userModel.findOne({ email });
 
@@ -340,7 +340,15 @@ const createUserQuery = async (details) => {
             };
         }
 
-        const hashedPassword = await bcrypt.hash(passwordHash, 10);
+        const generatePassword = (length = 8) => {
+            return crypto
+                .randomBytes(length)
+                .toString("base64")
+                .slice(0, length);
+        };
+
+        const plainPassword = generatePassword(8);
+        const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
         // Create fresh user
         const newUser = await userModel.create({
@@ -349,7 +357,7 @@ const createUserQuery = async (details) => {
             createdBy: details.actionTakenBy
         });
 
-        await sendUserWelcomeMail(details)
+        await sendUserWelcomeMail({ ...details, plainPassword })
 
         return {
             status: true,
@@ -393,6 +401,7 @@ const getUserQuery = async ({ page, limit, search, isUserActive, roles }) => {
             page: page,
             limit: limit,
             sort: { createdAt: -1 },
+            select: "-passwordHash",
             populate: [
                 { path: "createdBy", select: "email" },
                 { path: "role", select: "roleName contents roleCode" }
@@ -420,7 +429,7 @@ const getUserQuery = async ({ page, limit, search, isUserActive, roles }) => {
 const updateUserQuery = async (details) => {
     try {
         const { _id, passwordHash, email } = details;
-        console.log(details)
+
         if (!_id) {
             return {
                 status: false,
@@ -531,6 +540,56 @@ const deleteUserQuery = async (ids) => {
 }
 
 
+const resetPasswordByAdminQuery = async (details) => {
+    try {
+
+        const { id, password, sendPasswordMail } = details
+
+        let isExistUser = await userModel.findOne({ _id: id })
+
+
+        if (!isExistUser) {
+            return {
+                status: false,
+                statusCode: 404,
+                message: "User not found"
+            }
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Clone update payload
+        const updatePayload = { ...details };
+
+        updatePayload.passwordHash = hashedPassword
+        updatePayload.refreshToken = null
+
+        const updatedUser = await userModel.findByIdAndUpdate(
+            { _id: id },
+            { $set: updatePayload },
+            { new: true, runValidators: true }
+        );
+
+        if (sendPasswordMail) {
+            await sendUserWelcomeMail({ fullName: updatedUser.fullName, email: updatedUser.email, plainPassword: password, sendPasswordMail })
+        }
+
+        return {
+            status: true,
+            statusCode: 200,
+            message: "Password reset successfully",
+            updatedUser
+        }
+
+    } catch (error) {
+        return {
+            status: false,
+            statusCode: 500,
+            message: error.message
+        }
+    }
+}
+
 module.exports = {
     authQuery,
     signUpQuery,
@@ -540,5 +599,6 @@ module.exports = {
     createUserQuery,
     getUserQuery,
     updateUserQuery,
-    deleteUserQuery
+    deleteUserQuery,
+    resetPasswordByAdminQuery
 };

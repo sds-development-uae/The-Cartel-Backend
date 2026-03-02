@@ -316,13 +316,14 @@ const sendUserWelcomeMail = async (data) => {
     const {
         fullName,
         email,
-        passwordHash,
+        plainPassword,
+        sendPasswordMail = false
     } = data;
 
     const mailOptions = {
         from: `"The Cartel Admin" <sumangal@samdigitalsolutions.digital>`,
         to: email,
-        subject: "✅ Your Account Has Been Successfully Created | The Cartel",
+        subject: sendPasswordMail ? "✅ Your Password Has Been Successfully Reset | The Cartel" : "✅ Your Account Has Been Successfully Created | The Cartel",
         html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -394,8 +395,8 @@ const sendUserWelcomeMail = async (data) => {
 
     <div class="content">
         <p>Hi <strong>${fullName}</strong>,</p>
-
-        <p>Your account has been successfully added to <strong>The Cartel Admin System</strong>.</p>
+        ${sendPasswordMail ? `<p>Your password has been reset successfully` : `<p>Your account has been successfully added to <strong>The Cartel Admin System</strong>.</p>`}
+        
 
         <div class="credentials">
             <p><strong>Login URL:</strong><br/>
@@ -404,7 +405,7 @@ const sendUserWelcomeMail = async (data) => {
             </a></p>
 
             <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Password:</strong> ${passwordHash}</p>
+            <p><strong>Password:</strong> ${plainPassword}</p>
         </div>
 
         <p>Please log in using the above credentials. For security reasons, we strongly recommend changing your password immediately after logging in.</p>

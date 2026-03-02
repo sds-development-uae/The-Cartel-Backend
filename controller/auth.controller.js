@@ -1,5 +1,5 @@
 const userModel = require("../models/user.model")
-const { authQuery, signUpQuery, verifyOtpQuery, resendOtpQuery, forgotPasswordQuery, createUserQuery, getUserQuery, updateUserQuery, deleteUserQuery } = require("../query/auth.query")
+const { authQuery, signUpQuery, verifyOtpQuery, resendOtpQuery, forgotPasswordQuery, createUserQuery, getUserQuery, updateUserQuery, deleteUserQuery, resetPasswordByAdminQuery } = require("../query/auth.query")
 const { verifyRefreshToken, signAccessToken } = require("../services/jwt.service")
 
 
@@ -165,6 +165,15 @@ const deleteUserController = async (req, res, next) => {
 }
 
 
+const resetPasswordByAdminController = async (req, res, next) => {
+    try {
+        const response = await resetPasswordByAdminQuery(req.body)
+        return res.send(response)
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     authController,
     signUpController,
@@ -176,5 +185,6 @@ module.exports = {
     createUserController,
     getUserController,
     updateUserController,
-    deleteUserController
+    deleteUserController,
+    resetPasswordByAdminController
 }
